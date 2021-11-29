@@ -1,0 +1,54 @@
+plugins {
+    id 'idea'
+    id 'java'
+    id 'application'
+}
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+group 'dev.keva'
+version '1.0.0'
+
+dependencies {
+    // SLF4J as a facade
+    implementation 'org.slf4j:slf4j-api:1.7.32'
+
+    // CLI lib
+    implementation 'info.picocli:picocli:4.6.2'
+    annotationProcessor 'info.picocli:picocli-codegen:4.6.2'
+
+    // for loading KDB
+    implementation 'net.openhft:chronicle-map:3.21.86'
+
+    // JUnit
+    testImplementation('org.junit.jupiter:junit-jupiter:5.8.1')
+
+    testImplementation 'ch.qos.logback:logback-classic:1.2.7'
+    testImplementation 'ch.qos.logback:logback-core:1.2.7'
+}
+
+// for picocli annotation processing
+compileJava {
+    options.compilerArgs += ["-Aproject=${project.group}/${project.name}"]
+}
+
+application {
+    // Define the main class for the application.
+    mainClassName = 'dev.keva.dbutil.App'
+}
+
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+    }
+}
